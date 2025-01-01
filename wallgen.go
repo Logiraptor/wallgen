@@ -15,13 +15,14 @@ import (
 	"strings"
 	"sync"
 
+	ubuntu "wallgen/data"
+
 	"github.com/golang/freetype/truetype"
-	"github.com/microo8/wallgen/data"
 	"golang.org/x/image/font"
 	"golang.org/x/image/math/fixed"
 )
 
-const unsplashUrl string = "https://source.unsplash.com/random"
+const imageUrl string = "https://picsum.photos/%d/%d"
 
 var (
 	width    = flag.Int("w", 1920, "width of the image")
@@ -41,7 +42,7 @@ func (c pixelColor) RGBA() (uint32, uint32, uint32, uint32) {
 	return c.r, c.g, c.b, c.a
 }
 
-//Flip returns a copy of input that has been flipped horizontally and vertically.
+// Flip returns a copy of input that has been flipped horizontally and vertically.
 func Flip(input image.Image) image.Image {
 
 	var wg sync.WaitGroup
@@ -63,7 +64,7 @@ func Flip(input image.Image) image.Image {
 	return newImg
 }
 
-//InvertColors returns a copy of input that has its colors inverted.
+// InvertColors returns a copy of input that has its colors inverted.
 func InvertColors(input image.Image) image.Image {
 
 	//create new image
@@ -94,7 +95,7 @@ func main() {
 	chimg := make(chan image.Image)
 
 	go func() {
-		resp, err := http.Get(fmt.Sprintf("%s/%dx%d", unsplashUrl, *width, *height))
+		resp, err := http.Get(fmt.Sprintf(imageUrl, *width, *height))
 		if err != nil {
 			log.Fatal(err)
 		}
